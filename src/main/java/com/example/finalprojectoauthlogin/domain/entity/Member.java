@@ -24,7 +24,6 @@ public class Member {
     private String provider;
     private Boolean emailAuth;
 
-
     @ElementCollection(fetch = FetchType.LAZY)
     @Column
     @Enumerated(EnumType.STRING)
