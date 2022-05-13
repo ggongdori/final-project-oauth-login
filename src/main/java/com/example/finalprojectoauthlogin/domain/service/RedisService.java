@@ -12,6 +12,7 @@ import java.time.Duration;
 @RequiredArgsConstructor
 public class RedisService {
 
+
     private final RedisTemplate redisTemplate;
 
     public String getData(String key) {
