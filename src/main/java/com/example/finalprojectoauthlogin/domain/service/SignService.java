@@ -16,6 +16,11 @@ import com.example.finalprojectoauthlogin.web.dto.MemberRegisterRequestDto;
 import com.example.finalprojectoauthlogin.web.dto.ReIssueRequestDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +41,7 @@ public class SignService {
     private final MemberRepository memberRepository;
 
     private final RedisService redisService;
+    private final RedisTemplate redisTemplate;
     private final ProviderService providerService;
     private final EmailService emailService;
 
@@ -58,7 +64,7 @@ public class SignService {
                         .email(requestDto.getEmail())
                         .password(passwordEncoder.encode(requestDto.getPassword()))
                         .provider(null)
-                        .emailAuth(false)
+//                        .emailAuth(false)
                         .build());
 
         emailService.send(requestDto.getEmail(), authToken);
@@ -156,4 +162,14 @@ public class SignService {
 
         return new TokenResponseDto(accessToken, refreshToken);
     }
+
+    @Transactional
+    public ResponseEntity logout(String token) {
+        ValueOperations<String, String> logoutValueOps = redisTemplate.opsForValue();
+        logoutValueOps.set(token, token);
+        User user = (User) jwtTokenProvider.getAuthentication(token).getPrincipal();
+        log.info("로그아웃 유저 아이디 : '{}', 유저 이름: '{}' ", user.getUsername(), user.getUsername());
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
 }

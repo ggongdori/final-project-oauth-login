@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProfileDto {
     private String email;
-//    private String profile_image;
+//    private String picture;
 }

@@ -24,13 +24,14 @@ public class Member {
     private String provider;
     private Boolean emailAuth;
 
+
     @ElementCollection(fetch = FetchType.LAZY)
     @Column
     @Enumerated(EnumType.STRING)
     private List<Role> roles = new ArrayList<>();
 
     @Builder
-    public Member(String email, String password, String provider, List<Role> roles, Boolean emailAuth) {
+    public Member(String email, String password, String provider, List<Role> roles) {
         this.email = email;
         this.password = password;
         this.provider = provider;
